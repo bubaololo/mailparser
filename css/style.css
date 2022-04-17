@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+:root {
+    --accent-color: rgb(8, 205, 240);
+    --bright-color: #fff;
+    --bg-color: #043264;
+  }
+body {
+    background-color: var(--bg-color);
+    width: 100vw;
+    min-height: 100vh;
+
+    font-family: 'Montserrat', sans-serif;
+    color: var(--accent-color);
+    font-size: 17px;
+    position: relative;
+}
+* {
+    box-sizing: border-box;
+}
+.box {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    padding: 10vh;
+    grid-template-columns: 1fr 2fr;
+    grid-template-areas: "form display display";
+    gap: 2vw;
+}
+
+
+
+form {
+    min-height: 250px;
+    min-width: 350px;
+    text-align: center;
+    margin: 4ch;
+    grid-area: form;
+    flex-basis: 30vw;
+
+  }
+
+.list {
+    /* display: inline-block; */
+    display: flex;
+    min-width: 300px;
+    min-height: 300px;
+    /* background-color: var(--bg-color); */
+    white-space: pre-wrap;
+    background-image: none;
+    padding: 4ch;
+    outline: 1px solid var(--accent-color);
+    /* outline-offset: 2ch; */
+    border-radius: 30px;
+    grid-area: display;
+    min-height: 70vh;
+    overflow-x: scroll;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-color) var(--bg-color);
+}
+.title {
+    grid-area: title;
+}
+.email {
+  color: #fff;
+}
+textarea {
+    background-color: var(--bg-color);
+    min-height: 70vh;
+    width: 100%;
+    border-radius: 20px;
+    padding: 2ch;
+    color: inherit;
+line-height: 3ch;
+border: none;
+/* background-color: rgba(255, 255, 255, .1); */
+    outline-offset: 2ch;
+    outline: 1px solid var(--accent-color);
+    scrollbar-width: thin;
+scrollbar-color: var(--accent-color) var(--bg-color);
+    resize: vertical;
+}
+
+#send_button {
+    padding: 1ch;
+    margin: 2ch;
+    border-radius: 20px;
+    background-color:var(--accent-color);
+    border: none;
+    margin-top: 4ch;
+}
+.list._active {
+    background-image: url(/NyanCat.gif);
+    background-repeat: no-repeat;
+
+    background-position: center center;
+}
+
+  table {
+    border-collapse: collapse;
+    /* border: 2px solid rgb(200,200,200); */
+    letter-spacing: 1px;
+ 
+  }
+  
+  td, th {
+    /* border: 1px solid rgb(190,190,190); */
+    padding: 10px 20px;
+  }
+  
+  th {
+    background-color: rgb(235,235,235);
+  }
+  
+  td {
+    text-align: left;
+    white-space: nowrap;
+    overflow-x: scroll;
+  }
+  
+  tr:nth-child(even) td {
+    background-color: var(--bg-color);
+  }
+  
+  tr:nth-child(odd) td {
+    background-color: #0b396a;
+  }
+  
+  caption {
+    padding: 10px;
+  }
