@@ -9,10 +9,10 @@
 //     // document.body.insertAdjacentHTML('afterbegin', a);
 //     console.log(b);
 // };
-const display = document.querySelector('.list')
+
 // clearList();
 
-
+const display = document.querySelector('.list')
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -36,12 +36,12 @@ document.addEventListener('DOMContentLoaded', () => {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             const formData = new FormData(this);
-
+            clearList();
             ajaxSend(formData)
                 .then((response) => {
 
                     // form.reset(); // очищаем поля формы
-                    // clearList();
+                    
                     display.classList.remove('_active');
                     printList();
 
@@ -53,8 +53,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
+
 function clearList() {
-    display.textContent = '';
+    const tables = document.querySelectorAll('table');
+        tables.forEach(table => table.textContent = '');
 }
 
 
@@ -67,6 +69,7 @@ async function printList() {
 
 
     if (readyJson == "") {
+        audioObj.play();
         alert('на страницах по вашему запросу не нашлось ни одного e-mail')
     } else {
         Object.entries(readyJson).forEach(element => {

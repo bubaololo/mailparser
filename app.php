@@ -2,7 +2,6 @@
 set_time_limit(0);
 ignore_user_abort();
 
-
 $resArray = [];
 function convertToSimpleArray($array){
     global $resArray; 
@@ -17,31 +16,23 @@ function convertToSimpleArray($array){
 }
 
 $raw = (trim($_POST['one']));
-// $raw = (trim(file_get_contents('urls_20.txt')));
 $arrayRE = '|\s|';
 $urlArray = preg_split($arrayRE,$raw);
-$urls = array_filter($urlArray);
-// $preUrls = array_filter($urlArray);
-// $urls = [];
+$preUrls = array_filter($urlArray);
+$urls = [];
 
-// foreach ($preUrls as $url) {
+foreach ($preUrls as $url) {
 
-// if(filter_var($url, FILTER_VALIDATE_URL)) {
-//     $urls[]=parse_url($url, PHP_URL_HOST);
-// } else {continue;}
-// }
-
-
-
+if(filter_var($url, FILTER_VALIDATE_URL)) {
+    $urls[]=parse_url($url, PHP_URL_HOST);
+} else {continue;}
+}
 
 $dir = dirname(__FILE__);
-$config['cookie_file'] = $dir . '/cookies/' . md5(microtime()) . '.txt';
-
+$config['cookie_file'] = $dir . '/cookies/' . uniqid() . '.txt';
 
 function curl_fetch_multi_2(array $urls_unique, int $max_connections = 100, array $additional_curlopts = null)
 {
-
-    // $urls_unique = array_unique($urls_unique);
     $ret = array();
     $mh = curl_multi_init();
     // $workers format: [(int)$ch]=url
@@ -55,6 +46,7 @@ function curl_fetch_multi_2(array $urls_unique, int $max_connections = 100, arra
         }
         $unemployed_workers[] = $unemployed_worker;
     }
+    
     unset($i, $unemployed_worker);
 
     $work = function () use (&$workers, &$unemployed_workers, &$mh, &$ret): void {
@@ -92,8 +84,6 @@ function curl_fetch_multi_2(array $urls_unique, int $max_connections = 100, arra
                 // no idea what this is, it's not the message we're looking for though, ignore it.
                 continue;
             }
-
-
             $ch = $info['handle'];
             $ch_index = (int) $ch;
             $url = $workers[$ch_index];
@@ -110,12 +100,10 @@ function curl_fetch_multi_2(array $urls_unique, int $max_connections = 100, arra
         CURLOPT_ENCODING => '',
         CURLOPT_FOLLOWLOCATION => 1,
         CURLOPT_SSL_VERIFYPEER => 0,
-CURLOPT_SSL_VERIFYSTATUS => 0,
-CURLOPT_SSL_VERIFYHOST => 0,
-CURLOPT_USERAGENT => 'Safari: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0 Safari/605.1.15',
-CURLOPT_REFERER => 'https://www.google.com/',
-        
-
+        CURLOPT_SSL_VERIFYSTATUS => 0,
+        CURLOPT_SSL_VERIFYHOST => 0,
+        CURLOPT_USERAGENT => 'Safari: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0 Safari/605.1.15',
+        CURLOPT_REFERER => 'https://www.google.com/',
     );
     if (! empty($additional_curlopts)) {
         // i would have used array_merge(), but it does scary stuff with integer keys.. foreach() is easier to reason about
@@ -152,7 +140,6 @@ $urlsContent = curl_fetch_multi_2($urls);
 $results = [];
 foreach($urlsContent as $url => $content) {
 
-
     $mailRE = '/\b\w+@\w+\.[^(jpg)(png)(webp)(jpeg)(gif)(avif)(svg)]\w{2,8}/';
     preg_match_all($mailRE,$content,$mailMatches);
 
@@ -166,10 +153,8 @@ foreach($urlsContent as $url => $content) {
 
     array_push($results,$matches);
     
+    } else {
 
-
-    }
-    else {
         $linksRE = '/(?:(menu-item.*?))(?:(\shref="))(?<link>[^"]+)/';
         preg_match_all($linksRE,$content,$linksMatches);
         $navLinks = array_unique($linksMatches['link']);
@@ -186,38 +171,30 @@ foreach($urlsContent as $url => $content) {
 
             array_push($results, $linkMatches);
             
-
-
         }
     } while (!empty($linkMatches[0]));
 
-
-        
     }
 
 }
 
-
 convertToSimpleArray($results);
 $ready = array_values(array_unique($resArray));
 
-
-
-
-$output = [];
+$exploded = [];
 foreach($ready as $bindedString) {
     $strPartsArr = explode('|',$bindedString);
-    $output[$strPartsArr[0]] = $strPartsArr[1];
+    $exploded[$strPartsArr[0]] = $strPartsArr[1];
 }
 
+$output = [];
+foreach($exploded as $key => $value) {
+    if(!array_key_exists($value,$output)) {
+        $output[$value] = $key;
+    } else {
+        $currentValue = $output[$value];
+        $output[$value] = $currentValue.", ".$key;
+    }
+}
 
 file_put_contents('t.json',json_encode($output, JSON_UNESCAPED_UNICODE));
-
-// echo "<pre>";
-// var_dump($output);
-
-
-
-
-
-?>
